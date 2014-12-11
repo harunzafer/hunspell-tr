@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nuve.Lang;
 
 namespace hunspell_tr
 {
@@ -44,7 +43,7 @@ namespace hunspell_tr
             foreach (var word in words)
             {
                 string stem;
-                if (!map.ContainsKey(word) && TryStem(word, out stem))
+                if (!map.ContainsKey(word) && Nuve.TryStem(word, out stem))
                 {
                     map.Add(word, stem);
                 }
@@ -52,29 +51,8 @@ namespace hunspell_tr
             return map;
         }
 
-        public static bool TryStem(string word, out string stem)
-        {
-            stem = null;
-            var analyzer = new WordAnalyzer(Language.Turkish);
-            var solutions = analyzer.Analyze(word);
+        
 
-            if (solutions.Count == 0)
-            {
-                return false;
-            }
-
-            int index = 0;
-            for (int j = 0; j < solutions.Count; j++)
-            {
-                if (solutions[j].HasSuffix("IC_COGUL_lAr"))
-                {
-                    index = j;
-                    break;
-                }
-            }
-
-            stem = solutions[index].GetStem().GetSurface();
-            return true;
-        }
+      
     }
 }

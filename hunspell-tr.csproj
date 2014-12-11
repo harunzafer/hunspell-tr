@@ -40,9 +40,8 @@
     <Reference Include="nunit.framework">
       <HintPath>packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Nuve, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\nuve\code\Nuve\bin\Release\Nuve.dll</HintPath>
+    <Reference Include="Nuve">
+      <HintPath>..\..\nuve\code\Nuve\bin\Release\Nuve.dll</HintPath>
     </Reference>
     <Reference Include="QuickGraph">
       <HintPath>packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
@@ -71,6 +70,7 @@
     <Compile Include="Affix.cs" />
     <Compile Include="AffixDictionary.cs" />
     <Compile Include="DictionaryGenerator.cs" />
+    <Compile Include="Nuve.cs" />
     <Compile Include="Test\HunspellHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

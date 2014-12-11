@@ -7,13 +7,13 @@ using NHunspell;
 
 namespace hunspell_tr.Test
 {
-    internal class HunspellHelper
+    internal static class HunspellHelper
     {
-        private const string BaseDictPath = @"C:\Users\hrzafer\Desktop\workspace\hunspell-tr\dictionaries\";
-        private const string BaseTestPath = @"C:\Users\hrzafer\Desktop\workspace\hunspell-tr\test\";
-        private const string BaseDataPath = @"C:\Users\hrzafer\Desktop\workspace\hunspell-tr\test\";
+        private const string BaseDictPath = @"..\..\..\dict\";
+        private const string BaseTestPath = @"..\..\..\test\";
+        private const string BaseDataPath = @"..\..\..\data\";
 
-        public static Hunspell HunspellTr = Create("hunspell-tr", "tr-TR");
+        public static Hunspell HunspellTr = Create("tr-TR", "tr-TR");
         public static Hunspell TrSpell = Create("tr-spell", "tr-TR");
         public static Hunspell EnGb = Create("en-GB", "en-GB");
         public static Hunspell EnUs = Create("en-US", "en-US");
@@ -36,7 +36,7 @@ namespace hunspell_tr.Test
 
         public static void GetInfo(string word)
         {
-            Console.WriteLine("Spelled correct:" + HunspellTr.Spell(word));
+            Console.WriteLine("Spelled TestCorrects:" + HunspellTr.Spell(word));
             var stems = HunspellTr.Stem(word);
             Console.WriteLine("Stems:");
             foreach (var stem in stems)
@@ -70,19 +70,21 @@ namespace hunspell_tr.Test
         /// </summary>
         /// <param name="hunspell">spellchecker</param>
         /// <param name="words"></param>
-        /// <param name="correct"></param>
+        /// <param name="testCorrects"></param>
         /// <returns></returns>
-        public static void TestWords(Hunspell hunspell, IEnumerable<string> words, bool correct)
+        public static void TestWords(Hunspell hunspell, IEnumerable<string> words, bool testCorrects)
         {
-            var failed = correct ? 
+            var failed = testCorrects ? 
                 words.Where(word => !hunspell.Spell(word)).ToList() : 
                 words.Where(word => hunspell.Spell(word)).ToList();
             
-            var msg = correct ? "correct" : "wrong";
-
+            var testType = testCorrects ? 
+                "False Positive Test\n" :
+                "False Negative Test\n";
+            
             if (failed.Any())
             {
-                Console.WriteLine("Test for " + msg + " words failed for " + failed.Count + " words");
+                Console.WriteLine(testType + "Failed for " + failed.Count + " words:");
                 foreach (var word in failed)
                 {
                     Console.WriteLine(word);
@@ -90,21 +92,21 @@ namespace hunspell_tr.Test
             }
             else
             {
-                Console.WriteLine("Test for " + msg + " words passed:");
+                Console.WriteLine(testType + "Passed.");
             }
-        }
 
-        public delegate IEnumerable<string> SpellcheckerTest(Hunspell hunspell, IEnumerable<string> words, bool correct);
+            Console.WriteLine();
+        }
 
         public static void RunTests()
         {
             Console.WriteLine("Hunspell-tr--------------------------: ");
-            TestWords(HunspellTr, GetCorrectWords(), correct: true);
-            TestWords(HunspellTr, GetWrongWords(), correct: false);
+            TestWords(HunspellTr, GetCorrectWords(), testCorrects: true);
+            TestWords(HunspellTr, GetWrongWords(), testCorrects: false);
 
-            Console.WriteLine("\nTr-spell---------------------------: ");
-            TestWords(TrSpell, GetCorrectWords(), correct: true);
-            TestWords(TrSpell, GetWrongWords(), correct: false);
+            //Console.WriteLine("\nTr-spell---------------------------: ");
+            //TestWords(TrSpell, GetCorrectWords(), testCorrects: true);
+            //TestWords(TrSpell, GetWrongWords(), testCorrects: false);
         }
     }
 }
