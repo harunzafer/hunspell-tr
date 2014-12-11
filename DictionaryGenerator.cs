@@ -5,7 +5,7 @@ using System.Text;
 
 namespace hunspell_tr
 {
-    internal class DictionaryGenerator
+    internal static class DictionaryGenerator
     {
         public static void Generate(IDictionary<string, string> wordStemMap, string path, string langCode)
         {
@@ -35,10 +35,10 @@ namespace hunspell_tr
             }          
 
             var dic = wordDictionary.Generate();
-            var aff = affixDictionary.GenerateDictFile();
+            var aff = affixDictionary.GenerateDictFile();            
 
-            File.WriteAllText(path + "/" + langCode + ".dic", dic, new UTF8Encoding(false));
-            File.WriteAllText(path + "/" + langCode + ".aff", aff, new UTF8Encoding(false));
+            File.WriteAllText(path + "/" + langCode + "-" + System.DateTime.Now + ".dic", dic, new UTF8Encoding(false));
+            File.WriteAllText(path + "/" + langCode + "-" + System.DateTime.Now + ".aff", aff, new UTF8Encoding(false));
 
         }
 

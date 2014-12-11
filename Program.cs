@@ -12,7 +12,7 @@ namespace hunspell_tr
     internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// 
         /// </summary>
         private const string DataDir = @"..\..\..\data\";
 
@@ -27,8 +27,8 @@ namespace hunspell_tr
         private static void Main()
         {
             Process(addNewWords: false,
-                createStemMapFile: true,
-                generateDictionary: true,
+                createStemMapFile: false,
+                generateDictionary: false,
                 runTests: true);
         }
 

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace hunspell_tr
 {
-    class Unigrams
+    static class Unigrams
     {
         public static IEnumerable<string> Read(string path)
         {
