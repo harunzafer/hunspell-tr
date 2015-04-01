@@ -20,9 +20,13 @@ namespace hunspell_tr.Test
 
         public static Hunspell Create(string dictPath, string langCode)
         {
-            var path = BaseDictPath + dictPath + "/" + langCode;
-            return new Hunspell(path + ".aff", path + ".dic");
+            DirectoryInfo di = new DirectoryInfo(BaseDictPath + dictPath);
+            FileSystemInfo[] files = di.GetFileSystemInfos();
+            var orderedFiles = files.OrderByDescending(f => f.Name).ToArray();
+            return new Hunspell(orderedFiles[1].FullName, orderedFiles[0].FullName);
         }
+
+
 
         public static IEnumerable<string> GetCorrectWords()
         {

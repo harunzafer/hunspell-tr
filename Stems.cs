@@ -40,14 +40,21 @@ namespace hunspell_tr
         public static IDictionary<string, string> Stem(IEnumerable<string> words)
         {
             var map = new Dictionary<string, string>();
+            int count = 0;
             foreach (var word in words)
             {
+                
                 string stem;
                 if (!map.ContainsKey(word) && Nuve.TryStem(word, out stem))
                 {
                     map.Add(word, stem);
                 }
+                else
+                {
+                    count++;
+                }
             }
+            Console.WriteLine(count + " of " + words.Count() + " words can not be stemmed" );
             return map;
         }
 

@@ -16,7 +16,7 @@ namespace hunspell_tr
         /// </summary>
         private const string DataDir = @"..\..\..\data\";
 
-        private const string DictDir = @"..\..\..\dict\";
+        private const string DictDirectoryPath = @"..\..\..\dict\";
         private const string WordListPath = DataDir + "words.txt";
         private const string StemMapPath = DataDir + "stemMap.txt";
         private const string NewWordsListPath = DataDir + "wordsToAdd.txt";
@@ -26,9 +26,10 @@ namespace hunspell_tr
         [STAThread]
         private static void Main()
         {
-            Process(addNewWords: false,
+            Process(
+                addNewWords: false,
                 createStemMapFile: false,
-                generateDictionary: false,
+                generateDictionary: true,
                 runTests: true);
         }
 
@@ -43,18 +44,25 @@ namespace hunspell_tr
 
             if (addNewWords)
             {
-                AddNewWordsToWordList();
-                Console.WriteLine("New Word List Constructed: " + sw.Elapsed);
+                if (AddNewWordsToWordList())
+                {
+                    Console.WriteLine(@"New Word List Constructed: " + sw.Elapsed);    
+                }
+                else
+                {
+                    Console.WriteLine(@"undefined words in word list. Aborting...");
+                    return;
+                }
             }
-
+            
             //Analyze and stem all the words from start or just use the created stems
-            var map = createStemMapFile ? CreateStemMapFile() : Stems.FromDictionary(StemMapPath);
-            Console.WriteLine("Stem Map Constructed: " + sw.Elapsed);
+            var wordStemMap = createStemMapFile ? CreateStemMapFile() : Stems.FromDictionary(StemMapPath);
+            Console.WriteLine(@"Stem Map Constructed: " + sw.Elapsed);
 
             if (generateDictionary)
             {
-                DictionaryGenerator.Generate(map, DictDir + "tr-TR", "tr-TR");
-                Console.WriteLine("Dictionary Generated: " + sw.Elapsed);
+                DictionaryGenerator.Generate(wordStemMap, DictDirectoryPath + "tr-TR", langCode:"tr-TR");
+                Console.WriteLine(@"Dictionary Generated: " + sw.Elapsed);
             }
 
             if (runTests)
@@ -72,13 +80,14 @@ namespace hunspell_tr
             return map;
         }
 
-        private static void AddNewWordsToWordList()
+        private static bool AddNewWordsToWordList()
         {
             var words = File.ReadAllLines(NewWordsListPath, Encoding.UTF8);
             
             if (Nuve.AreAllWordsValid(words) == false)
             {
-                return;
+                Console.WriteLine(@"Warning: Not all words in the new word list are correct");
+                return false;
             }
 
             var unigrams = File.ReadAllLines(WordListPath, Encoding.UTF8).ToList();
@@ -86,6 +95,8 @@ namespace hunspell_tr
             unigrams.Sort();
 
             File.WriteAllLines(WordListPath, unigrams.Distinct(), Encoding.UTF8);
+
+            return true;
         }
 
         private static void EliminateWordsContainingNumber()
@@ -105,7 +116,7 @@ namespace hunspell_tr
         private static void GenerateTestDictionary()
         {
             var map = Stems.FromDictionary(DataDir + "stemMapTest.txt");
-            DictionaryGenerator.Generate(map, DictDir + @"test", "test");
+            DictionaryGenerator.Generate(map, DictDirectoryPath + @"test", "test");
         }
 
         private static void SortAndEliminateDuplicates(string path)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -37,10 +38,18 @@ namespace hunspell_tr
             var dic = wordDictionary.Generate();
             var aff = affixDictionary.GenerateDictFile();            
 
-            File.WriteAllText(path + "/" + langCode + "-" + System.DateTime.Now + ".dic", dic, new UTF8Encoding(false));
-            File.WriteAllText(path + "/" + langCode + "-" + System.DateTime.Now + ".aff", aff, new UTF8Encoding(false));
+            File.WriteAllText(path + "\\" + GetTimeStamp(langCode, "dic"), dic, new UTF8Encoding(false));
+            File.WriteAllText(path + "\\" + GetTimeStamp(langCode, "aff"), aff, new UTF8Encoding(false));
 
         }
+
+        private static string GetTimeStamp(string name, string ext)
+        {
+            return string.Format("{0}-{1:yyyy-MM-dd_hh-mm-ss}.{2}",name, DateTime.Now, ext);
+        }
+
+        
+
 
 
     }

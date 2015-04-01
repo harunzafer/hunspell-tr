@@ -24,7 +24,7 @@ namespace hunspell_tr
                 if (!HasSolution(word))
                 {
                     areAllWordsValid = false;
-                    Console.WriteLine(word + " no solution!");
+                    Console.WriteLine(@"No solution for the new word :" + word );
                 }
             }
 
